@@ -15,4 +15,8 @@ public class Role {
 
     @Column(unique = true , nullable = false)
     private String role; // "ROLE_ADMIN" here role is prefix as SpringSecurity has in built ADMIN so to differentiate we are adding prefix as ROLE.
+
+    public Role(String role) {
+        this.role = role;
+    }
 }
