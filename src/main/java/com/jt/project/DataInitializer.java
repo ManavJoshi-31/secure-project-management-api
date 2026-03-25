@@ -62,6 +62,6 @@ public class DataInitializer implements CommandLineRunner {
             employee.setRole(adminRole);
             userRepository.save(employee);
         }
-        System.out.println("TEST DATA ADDED");
+        System.out.println(" === TEST DATA ADDED === ");
     }
 }
