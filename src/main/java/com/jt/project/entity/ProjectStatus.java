@@ -1,4 +1,7 @@
 package com.jt.project.entity;
 
-public class ProjectStatus {
+public enum ProjectStatus {
+    ACTIVE,
+    COMPLETED,
+    ON_HOLD
 }
