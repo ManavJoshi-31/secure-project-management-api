@@ -47,7 +47,7 @@ public class TaskService {
         return taskRepository.findAll();
     }
 
-    public Task getTaskbyId(int id){
+    public Task getTaskById(int id){
         return taskRepository.findById(id)
                 .orElseThrow(()-> new ResourceNotFoundException("Task not found wiht id: "+id));
     }
