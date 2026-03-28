@@ -52,7 +52,7 @@ public class TaskService {
                 .orElseThrow(()-> new ResourceNotFoundException("Task not found wiht id: "+id));
     }
 
-    public List<Task> getTaskByProject(int projectId){
+    public List<Task> getTasksByProject(int projectId){
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(()-> new ResourceNotFoundException("Project not found with id: "+projectId));
         return taskRepository.findByProject(project);
