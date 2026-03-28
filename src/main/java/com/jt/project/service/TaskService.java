@@ -39,6 +39,7 @@ public class TaskService {
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "User not found with id: " + assignedToId));
         task.setAssignedTo(assignee);
+        task.setProject(project);
 
         return taskRepository.save(task);
     }
