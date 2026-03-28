@@ -69,4 +69,33 @@ public class TaskService {
                 .orElseThrow(()-> new ResourceNotFoundException("Task not found with id : "+id));
         taskRepository.delete(task);
     }
+
+    public Task updateTask(int taskId, String title,
+                           String description, TaskStatus status) {
+
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Task not found with id: " + taskId));
+
+        String currentUsername = SecurityContextHolder.getContext()
+                .getAuthentication().getName();
+
+        User currentUser = userRepository.findByUsername(currentUsername);
+
+        boolean isEmployee = currentUser.getRole().getRole().equals("ROLE_EMPLOYEE");
+
+        if (isEmployee) {
+            if (task.getAssignedTo() == null ||
+                    !(((task.getAssignedTo()).getId())==(currentUser.getId()))) {
+                throw new BusinessRuleException(
+                        "Employees can only update their own assigned tasks.");
+            }
+        }
+
+        if (title != null) task.setTitle(title);
+        if (description != null) task.setDescription(description);
+        if (status != null) task.setStatus(status);
+
+        return taskRepository.save(task);
+    }
 }
