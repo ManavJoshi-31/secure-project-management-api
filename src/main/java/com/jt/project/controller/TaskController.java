@@ -54,8 +54,8 @@ public class TaskController {
         return ResponseEntity.ok(tasks);
     }
 
-    // GET /api/tasks/3
-    @GetMapping("/{id}")
+    // GET /api/tasks/id/3
+    @GetMapping("/id/{id}")
     public ResponseEntity<TaskResponseDTO> getTaskById( @PathVariable int id) {
         Task task = taskService.getTaskById(id);
         return ResponseEntity.ok(mapToDTO(task));
