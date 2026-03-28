@@ -85,10 +85,8 @@ public class TaskService {
         boolean isEmployee = currentUser.getRole().getRole().equals("ROLE_EMPLOYEE");
 
         if (isEmployee) {
-            if (task.getAssignedTo() == null ||
-                    !(((task.getAssignedTo()).getId())==(currentUser.getId()))) {
-                throw new BusinessRuleException(
-                        "Employees can only update their own assigned tasks.");
+            if (task.getAssignedTo() == null || task.getAssignedTo().getId() != currentUser.getId()) {
+                throw new BusinessRuleException("Employees can only update their own assigned tasks.");
             }
         }
 
