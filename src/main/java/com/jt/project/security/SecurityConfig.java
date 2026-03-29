@@ -41,6 +41,8 @@ public class SecurityConfig {
                 // Define authorization rules
                 .authorizeHttpRequests(auth -> auth
 
+                        //For all
+                        .requestMatchers("/api/auth/**").permitAll()
 
                         // only ADMIN can see all users or delete a user
                         .requestMatchers(HttpMethod.GET, "/api/users").hasRole("ADMIN")
