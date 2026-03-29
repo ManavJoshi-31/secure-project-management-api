@@ -51,7 +51,7 @@ public class DataInitializer implements CommandLineRunner {
             manager.setUsername("manager1");
             manager.setPassword(passwordEncoder.encode("manager123"));
             manager.setEmail("manager123@gmail.com");
-            manager.setRole(adminRole);
+            manager.setRole(managerRole);
             userRepository.save(manager);
         }
         if(!userRepository.existsByUsername("emp1")) {
@@ -59,7 +59,7 @@ public class DataInitializer implements CommandLineRunner {
             employee.setUsername("emp1");
             employee.setPassword(passwordEncoder.encode("emp123"));
             employee.setEmail("emp123@gmail.com");
-            employee.setRole(adminRole);
+            employee.setRole(employeeRole);
             userRepository.save(employee);
         }
         System.out.println(" === TEST DATA ADDED === ");
