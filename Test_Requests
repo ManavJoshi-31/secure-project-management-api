@@ -1,0 +1,157 @@
+Register ADMIN:
+POST http://localhost:8080/api/auth/register
+{
+    "username": "admin",
+    "password": "admin123",
+    "email": "admin@company.com",
+    "roleName": "ROLE_ADMIN"
+}
+--------------------------------------------
+Register MANAGER:
+POST http://localhost:8080/api/auth/register
+
+{
+    "username": "manager1",
+    "password": "manager123",
+    "email": "manager@company.com",
+    "roleName": "ROLE_MANAGER"
+}
+--------------------------------------------
+Register EMPLOYEE:
+POST http://localhost:8080/api/auth/register
+{
+    "username": "emp1",
+    "password": "emp123",
+    "email": "emp@company.com",
+    "roleName": "ROLE_EMPLOYEE"
+}
+--------------------------------------------
+
+Phase 1 — Project operations
+Create project as MANAGER:
+POST http://localhost:8080/api/projects
+Auth: manager1 / manager123
+{
+    "name": "Website Redesign",
+    "description": "Redesign company website",
+    "createdById": 2
+}
+Expected: 201 Created
+
+--------------------------------------------
+POST http://localhost:8080/api/projects
+Auth: emp1 / emp123
+
+{
+    "name": "Should Fail",
+    "description": "Employee cannot do this",
+    "createdById": 3
+}
+Expected: 403 Forbidden
+--------------------------------------------
+Get all projects:
+GET http://localhost:8080/api/projects
+Auth: emp1 / emp123
+Expected: 200 OK — employee CAN read
+--------------------------------------------
+Get project by Id:
+GET http://localhost:8080/api/projects/1
+Auth: emp1 / emp123
+Expected: 200 OK
+--------------------------------------------
+Phase 2 — Task operations
+Create task as MANAGER:
+POST http://localhost:8080/api/tasks
+Auth: manager1 / manager123
+{
+    "title": "Design homepage",
+    "description": "Create mockup",
+    "projectId": 1,
+    "assignedToId": 3
+}
+Expected: 201 Created, assignedTo emp1
+--------------------------------------------
+Create second task assigned to manager:
+POST http://localhost:8080/api/tasks
+Auth: manager1 / manager123
+
+{
+    "title": "Write content",
+    "description": "Write all content",
+    "projectId": 1,
+    "assignedToId": 2
+}
+--------------------------------------------
+Get tasks by project:
+GET http://localhost:8080/api/tasks/project/1
+Auth: admin / admin123
+Expected: both tasks
+--------------------------------------------
+Get tasks by user:
+GET http://localhost:8080/api/tasks/user/3
+Auth: admin / admin123
+Expected: only emp1's task
+--------------------------------------------
+Phase 3 — The critical business rule tests
+EMPLOYEE updates their own task:
+PUT http://localhost:8080/api/tasks/1
+Auth: emp1 / emp123
+
+{
+    "status": "IN_PROGRESS"
+}
+Expected: 200 OK
+--------------------------------------------
+EMPLOYEE updates someone else's task 
+PUT http://localhost:8080/api/tasks/2
+Auth: emp1 / emp123
+
+{
+    "status": "DONE"
+}
+Expected: error from service layer
+--------------------------------------------
+deleting project with incomplete tasks — must fail:
+DELETE http://localhost:8080/api/projects/1
+Auth: admin / admin123
+Expected: error — incomplete tasks exist
+--------------------------------------------
+Mark all tasks as DONE:
+PUT http://localhost:8080/api/tasks/1
+Auth: admin / admin123
+{ "status": "DONE" }
+PUT http://localhost:8080/api/tasks/2
+Auth: admin / admin123
+{ "status": "DONE" }
+--------------------------------------------
+Now delete project 
+DELETE http://localhost:8080/api/projects/1
+Auth: admin / admin123
+Expected: 204 No Content
+--------------------------------------------
+Verify cascade — tasks must be gone too:
+GET http://localhost:8080/api/tasks
+Auth: admin / admin123
+Expected: empty list — cascade delete worked
+--------------------------------------------
+Phase 4 — User management
+ADMIN sees all users:
+GET http://localhost:8080/api/users
+Auth: admin / admin123
+Expected: 200 OK
+--------------------------------------------
+MANAGER tries to see all users
+GET http://localhost:8080/api/users
+Auth: manager1 / manager123
+Expected: 403 Forbidden
+--------------------------------------------
+Try registering duplicate username:
+POST http://localhost:8080/api/auth/register
+{
+    "username": "admin",
+    "password": "something",
+    "email": "other@test.com",
+    "roleName": "ROLE_ADMIN"
+}
+Expected: error — username already taken
+--------------------------------------------
