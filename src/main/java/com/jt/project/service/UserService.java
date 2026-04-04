@@ -67,6 +67,21 @@ public class UserService {
         return user;
     }
 
+    // Change password
+    public User changePassword(int id, String oldPassword, String newPassword) {
+
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "User not found with id: " + id));
+
+        // Rule: old password must match
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            throw new BusinessRuleException("Old password is incorrect.");
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        return userRepository.save(user);
+    }
     public void deleteUser(int id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
