@@ -17,7 +17,7 @@ public class User {
     private String username;
 
     @Column(nullable = false)
-    private String password; //will be stored as hash
+    private String password;
 
     @Column(nullable = false , unique = true)
     private String email;

@@ -128,7 +128,7 @@ User (1) ──────── (Many) Task       [assignedTo]
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/yourusername/secure-project-management-api.git
+git clone https://github.com/ManavJoshi-31/secure-project-management-api
 cd secure-project-management-api
 ```
 
@@ -335,7 +335,7 @@ Request → Security Filter Chain → Controller → Service → Repository → 
 
 ## Author
 
-**Manav** — Computer Engineering Student  
+**Manav Joshi** — Computer Engineering Student  
 Term Project — Java Technologies (Spring Boot)
 
 ---

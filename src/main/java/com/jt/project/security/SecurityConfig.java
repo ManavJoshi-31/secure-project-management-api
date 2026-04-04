@@ -59,9 +59,7 @@ public class SecurityConfig {
                         // only ADMIN and MANAGER can create or delete tasks
                         .requestMatchers(HttpMethod.POST, "/api/tasks").hasAnyRole("ADMIN", "MANAGER")
                         .requestMatchers(HttpMethod.DELETE, "/api/tasks/**").hasAnyRole("ADMIN", "MANAGER")
-                        // everyone can read tasks
                         .requestMatchers(HttpMethod.GET, "/api/tasks/**").hasAnyRole("ADMIN", "MANAGER", "EMPLOYEE")
-                        // everyone can update tasks (employee restriction handled in service)
                         .requestMatchers(HttpMethod.PUT, "/api/tasks/**").hasAnyRole("ADMIN", "MANAGER", "EMPLOYEE")
 
                         // any other request must be authenticated
@@ -69,7 +67,6 @@ public class SecurityConfig {
                 )
 
                 // Use HTTP Basic Authentication
-                // Client sends Base64(username:password) in every request header
                 .httpBasic(httpBasic -> httpBasic.realmName("Task Management API"))
 
                 // Connect our custom UserDetailsService
@@ -77,18 +74,17 @@ public class SecurityConfig {
 
         return http.build();
     }
-    // Connects UserDetailsService + PasswordEncoder together
-    // This is what Spring uses to authenticate
+
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
         provider.setPasswordEncoder(passwordEncoder);
         return provider;
     }
+
     // Needed if you ever want to authenticate programmatically
     @Bean
-    public AuthenticationManager authenticationManager(
-            AuthenticationConfiguration config) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
 }
